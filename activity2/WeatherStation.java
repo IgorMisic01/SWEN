@@ -43,8 +43,13 @@ public class WeatherStation implements Runnable {
         double kelvin; /* temperature in kelvins */
         final int KTOC = -27315; // Convert raw Kelvin reading to Celsius
 
+        /* Added both UI-s so that they can be used */
         AWTUI awtUI = new AWTUI();
         SwingUI swingUI = new SwingUI();
+
+        /* positiong of the 2 UI-s so they are not in one another */
+        awtUI.setLocation(200, 350); 
+        swingUI.setLocation(1000, 350);
 
 
         while (true) {
@@ -53,9 +58,20 @@ public class WeatherStation implements Runnable {
             } catch (Exception e) {
             } // ignore exceptions
 
+
             reading = sensor.reading();
             celsius = (reading + KTOC) / 100.0;
-            kelvin = celsius + 273.15;
+
+            kelvin = celsius + 273.15; /* transformed celsius to kelvins */
+
+            /* Here I added values that should change on screen */
+
+            awtUI.celsiusField.setText(String.format("%6.2f",celsius));
+            awtUI.kelvinField.setText(String.format("%6.2f",kelvin));
+
+            swingUI.setCelsiusJLabel(celsius);
+            swingUI.setKelvinJLabel(kelvin);
+
             /*
              * System.out.printf prints formatted data on the output screen.
              *
@@ -73,7 +89,7 @@ public class WeatherStation implements Runnable {
              * for more information on formatting output.
              */
             //
-            System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", celsius, kelvin); /* I just added 273.15 to current celisius temperature  */
+            System.out.printf("Reading is %6.2f degrees C and %6.2f degrees K%n", celsius, kelvin); 
         }
     }
 
@@ -83,6 +99,7 @@ public class WeatherStation implements Runnable {
      * Embed the WeatherStation in a Thread.
      * Start the Thread.
      */
+
     public static void main(String[] args) {
         
         WeatherStation ws = new WeatherStation();
